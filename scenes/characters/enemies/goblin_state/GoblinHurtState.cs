@@ -39,12 +39,6 @@ public partial class GoblinHurtState : GoblinState
         }
     }
 
-    public override void PhysicsUpdate(double delta)
-    {
-        Goblin.ProcessMovement(delta);
-    }
-
-
     public override void Exit(State nextState)
     {
         if (_isConnectedAnimationFinished)

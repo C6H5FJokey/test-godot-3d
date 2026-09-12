@@ -13,7 +13,7 @@ public partial class PlayerDefendState : PlayerState
         Player.CheckJumpInput();
         var velocity = Player.Velocity;
         Player.Velocity = (velocity * 0.8f) with {Y = velocity.Y};
-        if (!Input.IsActionPressed("offhand_action"))
+        if (!Player.Intent.Defend)
         {
             StateMachine.ChangeState<PlayerMoveState>();
         }

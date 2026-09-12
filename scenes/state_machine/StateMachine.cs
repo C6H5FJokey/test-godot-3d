@@ -5,10 +5,16 @@ using System.Collections.Generic;
 [GlobalClass]
 public partial class StateMachine : Node
 {
+    private const int MAX_TRANSITION_PER_TICK = 8;
+
     [Export] private State _initialState;
 
     private Dictionary<Type, State> _states = [];
     [Export] private State _currentState;
+
+    private State _pendingState;
+    private object _pendingData;
+    private bool _isApplyingTransition;
 
     public Node Actor { get; private set; }
 
@@ -38,28 +44,27 @@ public partial class StateMachine : Node
         }
     }
 
-    public override void _Process(double delta)
+    public void Tick(double delta)
     {
         _currentState?.Update(delta);
+        ApplyPendingTransition();
     }
 
-    public override void _PhysicsProcess(double delta)
+    public void TickPhysics(double delta)
     {
         _currentState?.PhysicsUpdate(delta);
+        ApplyPendingTransition();
     }
 
     public void ChangeState(State nextState, object data = null)
     {
-        if (nextState == null || nextState == _currentState)
+        if (nextState == null)
+        {
             return;
+        }
 
-        State previousState = _currentState;
-
-        _currentState?.Exit(nextState);
-
-        _currentState = nextState;
-
-        _currentState.Enter(previousState, data);
+        _pendingState = nextState;
+        _pendingData = data;
     }
 
     public void ChangeState<T>(object data = null) where T : State
@@ -70,6 +75,47 @@ public partial class StateMachine : Node
             return;
         }
         ChangeState(nextState, data);
+    }
+
+    private void ApplyPendingTransition()
+    {
+        if (_isApplyingTransition)
+        {
+            return;
+        }
+
+        _isApplyingTransition = true;
+        try
+        {
+            var transitionCount = 0;
+            while (_pendingState != null)
+            {
+                if (++transitionCount > MAX_TRANSITION_PER_TICK)
+                {
+                    GD.PushError($"{Actor?.Name} keeps changing state without settling, last state is {_pendingState.GetType().Name}.");
+                    _pendingState = null;
+                    _pendingData = null;
+                    break;
+                }
+
+                var nextState = _pendingState;
+                var data = _pendingData;
+                _pendingState = null;
+                _pendingData = null;
+
+                var previousState = _currentState;
+
+                previousState?.Exit(nextState);
+
+                _currentState = nextState;
+
+                _currentState.Enter(previousState, data);
+            }
+        }
+        finally
+        {
+            _isApplyingTransition = false;
+        }
     }
 
 }

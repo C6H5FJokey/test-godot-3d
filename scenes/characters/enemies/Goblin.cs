@@ -5,11 +5,12 @@ using System.Runtime.CompilerServices;
 public partial class Goblin : Enemy, IImpaleable
 {
 
+    private const float TURN_SPEED = 4f;
+
     [Export] public float Gravity { get; set; } = 0.98f;
     [Export] public float AirFriction { get; set; } = 1f;
     [Export] public float Speed { get; set; } = 3f;
     [Export] public ulong DurationBetweenAttacks { get; set; }
-    [Export] public Player Player { get; set; }
 
     public ImpaleComponent ImpaleComponent {get; set;}
     public PhysicalBoneSimulator3D PhysicalBoneSimulator { get; private set; }
@@ -19,12 +20,14 @@ public partial class Goblin : Enemy, IImpaleable
     public HealthComponent HealthComponent;
     public PhysicalBone3D PhysicalBoneBody;
     public StateMachine StateMachine;
+    public GoblinAIController Controller;
     private RayCast3D _weaponReachRaycast;
-    private Area3D _playerDetectArea;
     public NavigationAgent3D NavigationAgent3D;
 
     public ulong TimeSinceLastAttack;
     public Vector3 PushbackForce;
+
+    public CharacterIntent Intent => Controller.Intent;
 
     public override void _Ready()
     {
@@ -38,10 +41,28 @@ public partial class Goblin : Enemy, IImpaleable
         HealthComponent = GetNode<HealthComponent>("%HealthComponent");
         PhysicalBoneBody = GetNode<PhysicalBone3D>("%Physical Bone Body");
         StateMachine = GetNode<StateMachine>("%StateMachine");
+        Controller = GetNode<GoblinAIController>("%Controller");
         _weaponReachRaycast = GetNode<RayCast3D>("%WeaponReachRaycast");
-        _playerDetectArea = GetNode<Area3D>("%PlayerDetectArea");
-        _playerDetectArea.BodyEntered += OnBodyEntered;
         NavigationAgent3D = GetNode<NavigationAgent3D>("%NavigationAgent3D");
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        Controller.UpdateIntent(delta);
+        StateMachine.TickPhysics(delta);
+        ProcessGravity();
+        ProcessPushback(delta);
+        Velocity = Velocity with
+        {
+            X = Mathf.MoveToward(Velocity.X, 0, (float)delta * AirFriction),
+            Z = Mathf.MoveToward(Velocity.Z, 0, (float)delta * AirFriction)
+        };
+        MoveAndSlide();
+    }
+
+    public override void _Process(double delta)
+    {
+        StateMachine.Tick(delta);
     }
 
     public bool CanImpale(WeaponData weaponData)
@@ -68,18 +89,13 @@ public partial class Goblin : Enemy, IImpaleable
         });
     }
 
-    public bool HasRegisteredPlayer()
+    public bool IsPlayerWithinReach(Player target)
     {
-        return Player != null && IsInstanceValid(Player);
-    }
-
-    public bool IsPlayerWithinReach()
-    {
-        if (HasRegisteredPlayer() && EquipmentComponent.HasWeapon())
+        if (target == null || !IsInstanceValid(target) || !EquipmentComponent.HasWeapon())
         {
-            return _weaponReachRaycast.IsColliding();
+            return false;
         }
-        return false;
+        return _weaponReachRaycast.IsColliding() && _weaponReachRaycast.GetCollider() == target;
     }
 
     public override void TryReceiveHit(Player player, HurtData hurtData)
@@ -94,12 +110,22 @@ public partial class Goblin : Enemy, IImpaleable
         EmitSignalScreamed(player);
     }
 
-    public void ProcessMovement(double delta)
+    public bool ApplyIntentMovement(double delta)
     {
-        ProcessGravity();
-        ProcessPushback(delta);
-        MoveAndSlide();
-        Velocity = Velocity with { X = Mathf.MoveToward(Velocity.X, 0, (float)delta * AirFriction), Z = Mathf.MoveToward(Velocity.Z, 0, (float)delta * AirFriction) };
+        if (Intent.Speed <= 0f || Intent.FacingDirection.IsZeroApprox())
+        {
+            return false;
+        }
+
+        var targetBasis = GlobalTransform.LookingAt(GlobalPosition + Intent.FacingDirection).Basis.Orthonormalized();
+        GlobalBasis = GlobalBasis.Orthonormalized().Slerp(targetBasis, (float)delta * TURN_SPEED);
+
+        var forward = -GlobalBasis.Z;
+        forward.Y = 0f;
+        forward = forward.Normalized();
+
+        Velocity = Velocity with { X = forward.X * Intent.Speed, Z = forward.Z * Intent.Speed };
+        return true;
     }
 
     public void ProcessGravity()
@@ -116,16 +142,8 @@ public partial class Goblin : Enemy, IImpaleable
         PushbackForce = Vector3.Zero;
     }
 
-    public void OnBodyEntered(Node3D node3D)
-    {
-        if (node3D is Player player)
-        {
-            Player = player;
-        }
-    }
-
     public override void OnScreamHeard(Player player)
     {
-        Player ??= player;
+        Controller.SetTargetIfEmpty(player);
     }
 }

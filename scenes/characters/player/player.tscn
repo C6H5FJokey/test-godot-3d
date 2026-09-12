@@ -12,6 +12,7 @@
 [ext_resource type="Script" uid="uid://bekw676bsq0ci" path="res://scenes/characters/player/state/PlayerAttackState.cs" id="9_ykrpk"]
 [ext_resource type="Script" uid="uid://br6wcylkq1ujw" path="res://scenes/characters/player/state/PlayerKickState.cs" id="10_i1nod"]
 [ext_resource type="Script" uid="uid://cqhbdkjsrb1c0" path="res://scenes/characters/player/state/PlayerDefendState.cs" id="11_4kqyw"]
+[ext_resource type="Script" uid="uid://dk9t4mwzv6cju" path="res://scenes/characters/player/PlayerController.cs" id="12_ptrlc"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yplap"]
 margin = 0.3
@@ -25,7 +26,6 @@ script = ExtResource("1_508ok")
 Acceleration = 30.0
 JumpForce = 15.0
 Gravity = 0.98
-MouseSensitivity = 0.002
 RunSpeed = 5.0
 WalkSpeed = 3.0
 
@@ -157,5 +157,10 @@ collision_mask = 36
 [node name="HealthComponent" parent="." unique_id=172102 instance=ExtResource("9_42irl")]
 unique_name_in_owner = true
 MaxHPValue = 20
+
+[node name="Controller" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("12_ptrlc")
+MouseSensitivity = 0.002
 
 [editable path="character"]

@@ -6,6 +6,7 @@ public partial class PlayerMoveState : PlayerState
     public override void PhysicsUpdate(double delta)
     {
         base.PhysicsUpdate(delta);
+        var intent = Player.Intent;
         Player.CheckJumpInput();
         Player.ProcessMovement(delta);
         var horizontalVelocity = Player.Velocity with { Y = 0 };
@@ -17,27 +18,27 @@ public partial class PlayerMoveState : PlayerState
         {
             Player.Anim.Play("idle");
         }
-        if (Input.IsActionJustPressed("use") && Player.CurrentPickableFocusedItem != null)
+        if (intent.Interact && Player.CurrentPickableFocusedItem != null)
         {
             StateMachine.ChangeState<PlayerPickUpState>();
             return;
         }
-        if (Input.IsActionJustPressed("throw") && Player.HasWeapon())
+        if (intent.Throw && Player.HasWeapon())
         {
             StateMachine.ChangeState<PlayerThrowState>();
             return;
         }
-        if (Input.IsActionJustPressed("action") && Player.HasWeapon())
+        if (intent.Attack && Player.HasWeapon())
         {
             StateMachine.ChangeState<PlayerAttackState>();
             return;
         }
-        if (Input.IsActionJustPressed("kick"))
+        if (intent.Kick)
         {
             StateMachine.ChangeState<PlayerKickState>();
             return;
         }
-        if (Input.IsActionJustPressed("offhand_action") && Player.HasOffhandEquitment())
+        if (intent.Defend && Player.HasOffhandEquitment())
         {
             StateMachine.ChangeState<PlayerDefendState>();
             return;
