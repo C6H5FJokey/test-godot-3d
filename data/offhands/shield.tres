@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="OffhandData" format=3 uid="uid://2wcriqc5h435"]
+
+[ext_resource type="PackedScene" uid="uid://rnmmlfwav0eh" path="res://assets/meshes/weapons/shield.glb" id="1_ev44i"]
+[ext_resource type="Script" uid="uid://x68r6kcxltfn" path="res://data/OffhandData.cs" id="2_xeqty"]
+
+[resource]
+script = ExtResource("2_xeqty")
+Name = "Shield"
+MaxDuration = 10
+GlbMesh = ExtResource("1_ev44i")
+metadata/_custom_type_script = "uid://x68r6kcxltfn"

@@ -1,0 +1,161 @@
+[gd_scene format=3 uid="uid://cq62nxj24biu"]
+
+[ext_resource type="Script" uid="uid://bh27oaj2jbf7o" path="res://scenes/characters/player/Player.cs" id="1_508ok"]
+[ext_resource type="Script" uid="uid://be7malmcfvh7x" path="res://scenes/characters/player/MainCamera.cs" id="2_3xnwo"]
+[ext_resource type="PackedScene" uid="uid://dw7ktu4pf5dwr" path="res://assets/meshes/characters/character.glb" id="2_t61fv"]
+[ext_resource type="PackedScene" uid="uid://nvq1gt826x0c" path="res://scenes/characters/components/equipment_component.tscn" id="3_hss88"]
+[ext_resource type="Script" uid="uid://qhkb4ceiejx0" path="res://scenes/state_machine/StateMachine.cs" id="4_hss88"]
+[ext_resource type="Script" uid="uid://dhwskl1s2giv5" path="res://scenes/characters/player/state/PlayerMoveState.cs" id="6_bsn6e"]
+[ext_resource type="Script" uid="uid://47v5kvuhel76" path="res://scenes/characters/player/state/PlayerPickUpState.cs" id="7_blysn"]
+[ext_resource type="Script" uid="uid://8dog04nhgvnt" path="res://scenes/characters/player/state/PlayerThrowState.cs" id="8_hv5x3"]
+[ext_resource type="PackedScene" uid="uid://bwyfguamc8tnr" path="res://scenes/characters/components/health_component.tscn" id="9_42irl"]
+[ext_resource type="Script" uid="uid://bekw676bsq0ci" path="res://scenes/characters/player/state/PlayerAttackState.cs" id="9_ykrpk"]
+[ext_resource type="Script" uid="uid://br6wcylkq1ujw" path="res://scenes/characters/player/state/PlayerKickState.cs" id="10_i1nod"]
+[ext_resource type="Script" uid="uid://cqhbdkjsrb1c0" path="res://scenes/characters/player/state/PlayerDefendState.cs" id="11_4kqyw"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yplap"]
+margin = 0.3
+radius = 0.4
+height = 1.7
+
+[node name="Player" type="CharacterBody3D" unique_id=1796582570]
+collision_layer = 2
+collision_mask = 7
+script = ExtResource("1_508ok")
+Acceleration = 30.0
+JumpForce = 15.0
+Gravity = 0.98
+MouseSensitivity = 0.002
+RunSpeed = 5.0
+WalkSpeed = 3.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=763651923]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+shape = SubResource("CapsuleShape3D_yplap")
+
+[node name="MainCamera" type="Camera3D" parent="." unique_id=1639798444]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.3)
+rotation_edit_mode = 2
+current = true
+near = 0.001
+script = ExtResource("2_3xnwo")
+
+[node name="SelectRaycast" type="RayCast3D" parent="MainCamera" unique_id=269861331]
+unique_name_in_owner = true
+target_position = Vector3(0, 0, -2)
+collision_mask = 8
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="character" parent="." unique_id=1512314073 instance=ExtResource("2_t61fv")]
+
+[node name="Skeleton3D" parent="character/骨架" parent_id_path=PackedInt32Array(1512314073, 1836054494) index="0" unique_id=381105506]
+bones/0/position = Vector3(0, -0.14942051, 0)
+bones/3/position = Vector3(-0.26670516, 0.47742647, -1.5181786e-07)
+bones/3/rotation = Quaternion(-0.0066605723, 0.12403046, 0.9922504, -0.0033473612)
+bones/3/scale = Vector3(1.0000004, 1, 1.0000819)
+bones/4/rotation = Quaternion(-0.33532104, -1.6922973e-05, -0.003915456, 0.94209576)
+bones/4/scale = Vector3(0.9999996, 0.99999, 1.0000168)
+bones/5/rotation = Quaternion(0.7392253, 2.3363324e-08, -1.90026e-05, 0.6734582)
+bones/6/position = Vector3(0.26670516, 0.47742647, -1.5181786e-07)
+bones/6/rotation = Quaternion(0.0066606463, 0.12403046, 0.99225044, 0.003347344)
+bones/6/scale = Vector3(1.0000004, 1, 1.0000819)
+bones/7/rotation = Quaternion(-0.33532104, 1.6922275e-05, 0.003915455, 0.94209576)
+bones/7/scale = Vector3(0.9999996, 0.99999, 1.0000168)
+bones/8/rotation = Quaternion(0.7392253, -2.3115412e-08, 1.9002411e-05, 0.6734582)
+bones/9/rotation = Quaternion(0.15953913, -0.15014523, 0.9724279, 0.07992348)
+bones/10/rotation = Quaternion(0.290639, 2.7823262e-08, 0.023531646, 0.95654345)
+bones/12/rotation = Quaternion(-0.15953916, -0.1501455, 0.97242785, -0.0799236)
+bones/13/rotation = Quaternion(0.29063958, 1.0011718e-07, -0.023531796, 0.95654327)
+bones/13/scale = Vector3(0.99999994, 0.9999989, 1.0000012)
+bones/15/position = Vector3(-0.26670513, 0.1128434, 0.06956737)
+bones/16/position = Vector3(0.26670513, 0.1128434, 0.06956737)
+bones/17/position = Vector3(-0.2642126, -0.12227971, -0.049999986)
+bones/17/rotation = Quaternion(0.0032096158, -0.6911041, 0.7227416, -0.0030691165)
+bones/18/position = Vector3(0.2642126, -0.12227971, -0.049999986)
+bones/19/position = Vector3(-0.1550683, -0.55562156, -0.06523885)
+bones/19/rotation = Quaternion(0.0032589214, 0.7070993, -0.7070993, -0.0032589214)
+bones/20/position = Vector3(0.1550683, -0.55562156, -0.06523885)
+bones/21/position = Vector3(-0.15468802, -0.8077369, 6.697981e-10)
+bones/21/rotation = Quaternion(5.3385087e-08, 0.7071068, -0.7071068, -5.3385087e-08)
+bones/22/position = Vector3(0.15468802, -0.8077369, 6.697981e-10)
+
+[node name="Hat Layer" parent="character/骨架/Skeleton3D" index="2" unique_id=196211491]
+visible = false
+
+[node name="Head_001" parent="character/骨架/Skeleton3D" index="3" unique_id=1634506578]
+visible = false
+
+[node name="MainHandAttachment" type="BoneAttachment3D" parent="character/骨架/Skeleton3D" index="12" unique_id=1053342200]
+transform = Transform3D(-0.999932, 0.010809497, 0.004345657, 0.00046633364, -0.33554658, 0.94202316, 0.011639515, 0.94203925, 0.33556628, 0.26421323, -0.12228772, -0.050007284)
+bone_name = "LowerArm_End.R"
+bone_idx = 8
+
+[node name="WeaponPlaceholder" type="Marker3D" parent="character/骨架/Skeleton3D/MainHandAttachment" unique_id=526754766]
+transform = Transform3D(0.25713125, -0.9663762, 0.0008975572, -0.0034906357, -1.5258055e-10, 0.9999943, -0.96637017, -0.25713283, -0.0033732678, 0, 0, 0)
+
+[node name="OffhandAttachment" type="BoneAttachment3D" parent="character/骨架/Skeleton3D" index="13" unique_id=832330758]
+transform = Transform3D(-0.999932, -0.01080935, -0.00434562, -0.00046634878, -0.33554655, 0.94202316, -0.011639363, 0.94203925, 0.33556628, -0.26421326, -0.12228772, -0.05000728)
+bone_name = "LowerArm_End.L"
+bone_idx = 5
+
+[node name="OffhandPlaceholder" type="Marker3D" parent="character/骨架/Skeleton3D/OffhandAttachment" unique_id=2077049589]
+transform = Transform3D(-0.116977796, 0.93969274, 0.32139382, -0.9396925, -4.107527e-08, -0.34202015, -0.32139373, -0.34202015, 0.8830223, 0.08, 0, 0)
+
+[node name="AnimationPlayer" parent="character" index="1" unique_id=1972368248]
+autoplay = &"idle"
+
+[node name="EquipmentComponent" parent="." unique_id=1526314860 node_paths=PackedStringArray("WeaponPlaceHolder", "WeaponSpawner", "ExtraPitch", "WeaponReachRaycast", "OffhandPlaceHolder") instance=ExtResource("3_hss88")]
+unique_name_in_owner = true
+IsAlwaysInFront = true
+WeaponPlaceHolder = NodePath("../character/骨架/Skeleton3D/MainHandAttachment/WeaponPlaceholder")
+WeaponSpawner = NodePath("../WeaponSpawner")
+ExtraPitch = NodePath("../MainCamera")
+WeaponReachRaycast = NodePath("../WeaponReachRaycast")
+OffhandPlaceHolder = NodePath("../character/骨架/Skeleton3D/OffhandAttachment/OffhandPlaceholder")
+
+[node name="WeaponSpawner" type="Marker3D" parent="." unique_id=640993316]
+transform = Transform3D(-4.3711385e-08, 1, 0, -0.99999994, -4.371139e-08, 0, 0, 0, 0.99999994, 0.10000001, 1.3000001, -0.4)
+
+[node name="StateMachine" type="Node" parent="." unique_id=937615775 node_paths=PackedStringArray("_initialState")]
+unique_name_in_owner = true
+script = ExtResource("4_hss88")
+_initialState = NodePath("PlayerMoveState")
+metadata/_custom_type_script = "uid://qhkb4ceiejx0"
+
+[node name="PlayerMoveState" type="Node" parent="StateMachine" unique_id=843379583]
+script = ExtResource("6_bsn6e")
+
+[node name="PlayerPickUpState" type="Node" parent="StateMachine" unique_id=1674509558]
+script = ExtResource("7_blysn")
+
+[node name="PlayerThrowState" type="Node" parent="StateMachine" unique_id=136937441]
+script = ExtResource("8_hv5x3")
+
+[node name="PlayerAttackState" type="Node" parent="StateMachine" unique_id=1679800152]
+script = ExtResource("9_ykrpk")
+
+[node name="PlayerKickState" type="Node" parent="StateMachine" unique_id=392208793]
+script = ExtResource("10_i1nod")
+
+[node name="PlayerDefendState" type="Node" parent="StateMachine" unique_id=1116290004]
+script = ExtResource("11_4kqyw")
+
+[node name="WeaponReachRaycast" type="RayCast3D" parent="." unique_id=852096943]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+target_position = Vector3(0, 0, -2)
+collision_mask = 4
+
+[node name="KickReachRaycast" type="RayCast3D" parent="." unique_id=746618335]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+target_position = Vector3(0, 0, -2)
+collision_mask = 36
+
+[node name="HealthComponent" parent="." unique_id=172102 instance=ExtResource("9_42irl")]
+unique_name_in_owner = true
+MaxHPValue = 20
+
+[editable path="character"]

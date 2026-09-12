@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://bavd64dgpp8up"]
+
+[ext_resource type="PackedScene" uid="uid://cad7am8knpcax" path="res://scenes/levels/base_level.tscn" id="1_0mf82"]
+[ext_resource type="PackedScene" uid="uid://btjaedfklgaav" path="res://scenes/rooms/entrance.tscn" id="2_iemd2"]
+[ext_resource type="PackedScene" uid="uid://d01th60qnoap5" path="res://scenes/rooms/foyer.tscn" id="3_xicp7"]
+[ext_resource type="PackedScene" uid="uid://d052nevu1rs16" path="res://scenes/rooms/kitchen.tscn" id="4_h8tnv"]
+[ext_resource type="PackedScene" uid="uid://dlq5y21m3ntpl" path="res://scenes/equipment/pickable_item.tscn" id="5_h8tnv"]
+[ext_resource type="Resource" uid="uid://csj7o2b7asc68" path="res://data/weapons/axe.tres" id="6_td8hj"]
+[ext_resource type="Resource" uid="uid://2wcriqc5h435" path="res://data/offhands/shield.tres" id="7_3sqe8"]
+[ext_resource type="PackedScene" uid="uid://uiqg1f8nhura" path="res://scenes/doors/door.tscn" id="7_td8hj"]
+
+[node name="Level-01-Welcome" unique_id=1895710965 instance=ExtResource("1_0mf82")]
+
+[node name="Entrance" parent="Rooms" parent_id_path=PackedInt32Array(1772095496) index="0" unique_id=460239503 instance=ExtResource("2_iemd2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 14)
+
+[node name="Foyer" parent="Rooms" parent_id_path=PackedInt32Array(1772095496) index="1" unique_id=1574385167 instance=ExtResource("3_xicp7")]
+
+[node name="Kitchen" parent="Rooms" parent_id_path=PackedInt32Array(1772095496) index="2" unique_id=1212563988 instance=ExtResource("4_h8tnv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -18)
+
+[node name="PlayerSpawn" parent="." index="1" unique_id=1644801036]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 15.824493)
+
+[node name="Floors" parent="Hallways" parent_id_path=PackedInt32Array(1124757356) index="0" unique_id=550791743]
+data = {
+"cells": PackedInt32Array(0, 9, 655366, 65535, 9, 6, 65535, 65525, 6, 0, 65525, 655366, 65521, 65524, 1048582, 65522, 65524, 1048582)
+}
+metadata/_editor_floor_ = Vector3(0, 0, 0)
+
+[node name="PickableItem" parent="." index="3" unique_id=1522218134 instance=ExtResource("5_h8tnv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8)
+EquipmentData = ExtResource("6_td8hj")
+
+[node name="PickableItem2" parent="." index="4" unique_id=17026288 instance=ExtResource("5_h8tnv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11)
+EquipmentData = ExtResource("7_3sqe8")
+
+[node name="Door" parent="Doors" parent_id_path=PackedInt32Array(41580060) index="0" unique_id=251907201 instance=ExtResource("7_td8hj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9.5)
+
+[node name="Door2" parent="Doors" parent_id_path=PackedInt32Array(41580060) index="1" unique_id=465372364 instance=ExtResource("7_td8hj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10.5)

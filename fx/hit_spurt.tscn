@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://36ism216c3yi"]
+
+[ext_resource type="Script" uid="uid://bxv4x54aypogw" path="res://fx/HitSpurt.cs" id="1_rpbx4"]
+
+[sub_resource type="Curve" id="Curve_ioy3f"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_em8xg"]
+curve = SubResource("Curve_ioy3f")
+
+[sub_resource type="Curve" id="Curve_t3nf8"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_mifdd"]
+curve = SubResource("Curve_t3nf8")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_w4amb"]
+emission_shape = 1
+emission_sphere_radius = 0.1
+direction = Vector3(0, 1, 0)
+spread = 180.0
+initial_velocity_min = 3.0
+initial_velocity_max = 5.0
+gravity = Vector3(0, 0, 0)
+radial_accel_min = -2.2351742e-06
+radial_accel_max = -2.2351742e-06
+scale_curve = SubResource("CurveTexture_mifdd")
+alpha_curve = SubResource("CurveTexture_em8xg")
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_iwsux"]
+transparency = 1
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 1, 0, 1)
+emission_enabled = true
+emission = Color(1, 1, 0, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_ox44b"]
+material = SubResource("ORMMaterial3D_iwsux")
+size = Vector3(0.01, 0.1, 0.01)
+
+[node name="HitSpurt" type="Node3D" unique_id=568941999]
+script = ExtResource("1_rpbx4")
+
+[node name="Sparks" type="GPUParticles3D" parent="." unique_id=1514086614]
+unique_name_in_owner = true
+emitting = false
+amount = 50
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+randomness = 0.5
+fixed_fps = 60
+transform_align = 2
+process_material = SubResource("ParticleProcessMaterial_w4amb")
+draw_pass_1 = SubResource("BoxMesh_ox44b")

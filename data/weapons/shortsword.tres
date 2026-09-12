@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://xfxrgv8wl1g6"]
+
+[ext_resource type="PackedScene" uid="uid://w3ib1wepnipw" path="res://assets/meshes/weapons/shortsword.glb" id="1_joehd"]
+[ext_resource type="Script" uid="uid://7ba7miybv8mj" path="res://data/WeaponData.cs" id="1_tc6ku"]
+
+[resource]
+script = ExtResource("1_tc6ku")
+Name = "Short Sword"
+MaxDuration = 30
+DamageMin = 3
+DamageMax = 5
+Reach = 2.0
+ThrowRotationSpeed = 40.0
+ThrowMovementSpeed = 15.0
+ImpaleLocalTranslation = Vector3(0, 0, 0.5)
+GlbMesh = ExtResource("1_joehd")
+metadata/_custom_type_script = "uid://7ba7miybv8mj"

@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://dlq5y21m3ntpl"]
+
+[ext_resource type="Script" uid="uid://c8fs0dnncaogj" path="res://scenes/equipment/PickableItem.cs" id="1_sgxpu"]
+
+[node name="PickableItem" type="Area3D" unique_id=1522218134]
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+script = ExtResource("1_sgxpu")
+IsScenePlaced = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1429235446]
+unique_name_in_owner = true

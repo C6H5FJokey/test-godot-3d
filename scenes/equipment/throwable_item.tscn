@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://dhyba3tma5jn3"]
+
+[ext_resource type="Script" uid="uid://dkpdb4axdx77v" path="res://scenes/equipment/ThrowableItem.cs" id="1_k1m1f"]
+
+[node name="ThrowableItem" type="RigidBody3D" unique_id=746910606]
+collision_layer = 16
+continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 3
+script = ExtResource("1_k1m1f")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1890054169]
+unique_name_in_owner = true

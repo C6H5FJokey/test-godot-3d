@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b3x3wd3c2l0hs"]
+
+[ext_resource type="Script" uid="uid://ttre2t63yk88" path="res://scenes/characters/components/ImpaleComponent.cs" id="1_v8s7t"]
+
+[node name="ImpaleComponent" type="Node" unique_id=1226537486]
+script = ExtResource("1_v8s7t")

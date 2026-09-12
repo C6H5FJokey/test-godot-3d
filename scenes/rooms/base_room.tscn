@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://bjl6fgugqx282"]
+
+[ext_resource type="MeshLibrary" uid="uid://b5t86gsbpny55" path="res://assets/meshlibs/walls-tiles.meshlib" id="1_43ixu"]
+[ext_resource type="Script" uid="uid://d4jvuim5oecc3" path="res://scenes/rooms/BaseRoom.cs" id="1_oxyh5"]
+[ext_resource type="MeshLibrary" uid="uid://5t514e4xxi1p" path="res://assets/meshlibs/ceilings-tiles.meshlib" id="2_4x8xk"]
+
+[node name="BaseRoom" type="Node3D" unique_id=460239503]
+script = ExtResource("1_oxyh5")
+
+[node name="Ceilings" type="GridMap" parent="." unique_id=1195225706]
+unique_name_in_owner = true
+mesh_library = ExtResource("2_4x8xk")
+cell_size = Vector3(1, 1, 1)
+cell_center_y = false
+collision_mask = 0
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=415815329]
+use_edge_connections = false
+
+[node name="Floors" type="GridMap" parent="NavigationRegion3D" unique_id=2118873624]
+unique_name_in_owner = true
+mesh_library = ExtResource("1_43ixu")
+cell_size = Vector3(1, 1, 1)
+cell_center_y = false
+collision_mask = 0
+
+[node name="Enemies" type="Node3D" parent="." unique_id=521150037]
+unique_name_in_owner = true

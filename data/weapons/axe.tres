@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://csj7o2b7asc68"]
+
+[ext_resource type="Script" uid="uid://7ba7miybv8mj" path="res://data/WeaponData.cs" id="1_ccd1n"]
+[ext_resource type="PackedScene" uid="uid://xucjfsg2ykoo" path="res://assets/meshes/weapons/axe.glb" id="1_ev13c"]
+
+[resource]
+script = ExtResource("1_ccd1n")
+Name = "Axe"
+MaxDuration = 10
+DamageMin = 6
+DamageMax = 10
+Reach = 3.0
+ThrowRotationSpeed = 40.0
+ThrowMovementSpeed = 8.0
+ImpaleLocalTranslation = Vector3(0, 0, 1.8)
+ImpaleLocalRotation = -75.0
+GlbMesh = ExtResource("1_ev13c")
+metadata/_custom_type_script = "uid://7ba7miybv8mj"

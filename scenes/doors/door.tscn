@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://uiqg1f8nhura"]
+
+[ext_resource type="Script" uid="uid://cbwnm8yj1chbu" path="res://scenes/doors/Door.cs" id="1_cjc7v"]
+[ext_resource type="PackedScene" uid="uid://bswfjxo48oee5" path="res://assets/meshes/doors/door.glb" id="1_vl1pl"]
+[ext_resource type="Script" uid="uid://b25uc6xip7eom" path="res://scenes/doors/DoorBody.cs" id="3_d8f5h"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yplap"]
+size = Vector3(1.2, 2.4, 0.2)
+
+[node name="Door" type="Node3D" unique_id=251907201]
+rotation_edit_mode = 2
+script = ExtResource("1_cjc7v")
+
+[node name="door" parent="." unique_id=433922857 instance=ExtResource("1_vl1pl")]
+
+[node name="DoorBody" type="StaticBody3D" parent="door/Door" parent_id_path=PackedInt32Array(433922857, 525461992) index="0" unique_id=570876156]
+collision_layer = 33
+collision_mask = 0
+script = ExtResource("3_d8f5h")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="door/Door/DoorBody" unique_id=601150027]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 1.2, 0)
+shape = SubResource("BoxShape3D_yplap")
+
+[editable path="door"]
