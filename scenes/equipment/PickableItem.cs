@@ -9,6 +9,9 @@ public partial class PickableItem : Area3D
     [Export] public Color HightlightColor { get; set; } = Colors.Yellow;
     [Export] public bool IsScenePlaced { get; set; }
     private Node3D _equipedObject;
+    private bool _isFocused;
+
+    public bool IsFocused => _isFocused;
 
     public override void _Ready()
     {
@@ -27,12 +30,19 @@ public partial class PickableItem : Area3D
         }
     }
 
-    public void Hightlight()
+    public void SetFocused(bool focused)
     {
-        if (_equipedObject == null)
+        if (_isFocused == focused)
         {
             return;
         }
+        _isFocused = focused;
+
+        if (_equipedObject == null || !IsInstanceValid(_equipedObject))
+        {
+            return;
+        }
+
         foreach (var meshNodeItem in _equipedObject.GetChildren())
         {
             if (meshNodeItem is not MeshInstance3D meshNode)
@@ -42,40 +52,31 @@ public partial class PickableItem : Area3D
             var mesh = meshNode.Mesh;
             for (int i = 0; i < mesh.GetSurfaceCount(); i++)
             {
-                var originalMaterial = meshNode.GetActiveMaterial(i);
-
-                if (!_materialCache.TryGetValue(originalMaterial, out var newMaterial))
-                {
-                    newMaterial = originalMaterial.Duplicate() as Material;
-                    if (newMaterial is BaseMaterial3D baseMaterial)
-                    {
-                        baseMaterial.AlbedoColor = HightlightColor;
-                    }
-                    _materialCache[originalMaterial] = newMaterial;
-                }
-                meshNode.SetSurfaceOverrideMaterial(i, newMaterial);
+                var overrideMaterial = focused ? GetHighlightMaterial(meshNode.GetActiveMaterial(i)) : null;
+                meshNode.SetSurfaceOverrideMaterial(i, overrideMaterial);
             }
         }
     }
 
-    public void Unhightlight()
+    private Material GetHighlightMaterial(Material originalMaterial)
     {
-        if (_equipedObject == null)
+        if (originalMaterial == null)
         {
-            return;
+            return null;
         }
-        foreach (var meshNodeItem in _equipedObject.GetChildren())
+
+        if (_materialCache.TryGetValue(originalMaterial, out var highlightMaterial))
         {
-            if (meshNodeItem is not MeshInstance3D meshNode)
-            {
-                continue;
-            }
-            var mesh = meshNode.Mesh;
-            for (int i = 0; i < mesh.GetSurfaceCount(); i++)
-            {
-                meshNode.SetSurfaceOverrideMaterial(i, null);
-            }
+            return highlightMaterial;
         }
+
+        highlightMaterial = originalMaterial.Duplicate() as Material;
+        if (highlightMaterial is BaseMaterial3D baseMaterial)
+        {
+            baseMaterial.AlbedoColor = HightlightColor;
+        }
+        _materialCache[originalMaterial] = highlightMaterial;
+        return highlightMaterial;
     }
 
 }

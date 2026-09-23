@@ -7,7 +7,7 @@ public partial class Goblin : Enemy, IImpaleable
 
     private const float TURN_SPEED = 4f;
 
-    [Export] public float Gravity { get; set; } = 0.98f;
+    [Export] public float Gravity { get; set; } = 9.8f;
     [Export] public float AirFriction { get; set; } = 1f;
     [Export] public float Speed { get; set; } = 3f;
     [Export] public ulong DurationBetweenAttacks { get; set; }
@@ -26,6 +26,8 @@ public partial class Goblin : Enemy, IImpaleable
 
     public ulong TimeSinceLastAttack;
     public Vector3 PushbackForce;
+
+    public bool IsRagdolling { get; private set; }
 
     public CharacterIntent Intent => Controller.Intent;
 
@@ -50,7 +52,13 @@ public partial class Goblin : Enemy, IImpaleable
     {
         Controller.UpdateIntent(delta);
         StateMachine.TickPhysics(delta);
-        ProcessGravity();
+
+        if (IsRagdolling)
+        {
+            return;
+        }
+
+        ProcessGravity(delta);
         ProcessPushback(delta);
         Velocity = Velocity with
         {
@@ -58,6 +66,15 @@ public partial class Goblin : Enemy, IImpaleable
             Z = Mathf.MoveToward(Velocity.Z, 0, (float)delta * AirFriction)
         };
         MoveAndSlide();
+    }
+
+    public void StartRagdoll()
+    {
+        IsRagdolling = true;
+        Velocity = Vector3.Zero;
+        CollisionShape.Disabled = true;
+        Anim.Stop();
+        PhysicalBoneSimulator.PhysicalBonesStartSimulation();
     }
 
     public override void _Process(double delta)
@@ -128,11 +145,11 @@ public partial class Goblin : Enemy, IImpaleable
         return true;
     }
 
-    public void ProcessGravity()
+    public void ProcessGravity(double delta)
     {
         if (!IsOnFloor())
         {
-            Velocity = Velocity with { Y = Velocity.Y - Gravity };
+            Velocity = Velocity with { Y = Velocity.Y - Gravity * (float)delta };
         }
     }
 

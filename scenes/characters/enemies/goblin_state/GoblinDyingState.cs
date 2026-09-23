@@ -8,9 +8,7 @@ public partial class GoblinDyingState : GoblinState
     public override void Enter(State previousState, object data)
     {
 
-        Goblin.CollisionShape.Disabled = true;
-        Goblin.Anim.Stop();
-        Goblin.PhysicalBoneSimulator.PhysicalBonesStartSimulation();
+        Goblin.StartRagdoll();
         if (data is GoblinDyingStateData stateData)
         {
             Goblin.PhysicalBoneBody.ApplyImpulse(stateData.Impulse);

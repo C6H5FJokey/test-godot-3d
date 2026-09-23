@@ -19,7 +19,7 @@ public partial class Player : CharacterBody3D
     public RayCast3D WeaponReachRaycast;
     public RayCast3D KickReachRaycast;
 
-    public PickableItem CurrentPickableFocusedItem;
+    private PickableItem _highlightedPickable;
 
     public CharacterIntent Intent => Controller.Intent;
 
@@ -46,11 +46,20 @@ public partial class Player : CharacterBody3D
 
     public override void _PhysicsProcess(double delta)
     {
+        UpdatePickableHighlight();
         Controller.UpdateIntent(delta);
         StateMachine.TickPhysics(delta);
-        ProcessGravity();
+        ProcessGravity(delta);
         MoveAndSlide();
-        CheckSelectRaycast();
+    }
+
+    public override void _ExitTree()
+    {
+        if (_highlightedPickable == null || !IsInstanceValid(_highlightedPickable))
+        {
+            return;
+        }
+        _highlightedPickable.TreeExiting -= OnHighlightedPickableExiting;
     }
 
     public void CheckJumpInput()
@@ -61,23 +70,45 @@ public partial class Player : CharacterBody3D
         }
     }
 
-    public void ProcessGravity()
+    public void ProcessGravity(double delta)
     {
         if (!IsOnFloor())
         {
-            Velocity = Velocity with { Y = Velocity.Y - Gravity };
+            Velocity = Velocity with { Y = Velocity.Y - Gravity * (float)delta};
         }
     }
 
-    public void CheckSelectRaycast()
+    public PickableItem GetPickableUnderCrosshair()
     {
-        var targetNode = SelectRaycast.GetCollider() as PickableItem;
-        if (targetNode != CurrentPickableFocusedItem)
+        return SelectRaycast.GetCollider() is PickableItem pickableItem && IsInstanceValid(pickableItem) ? pickableItem : null;
+    }
+
+    private void UpdatePickableHighlight()
+    {
+        var pickableItem = GetPickableUnderCrosshair();
+        if (pickableItem == _highlightedPickable)
         {
-            CurrentPickableFocusedItem?.Unhightlight();
-            targetNode?.Hightlight();
-            CurrentPickableFocusedItem = targetNode;
+            return;
         }
+
+        if (_highlightedPickable != null && IsInstanceValid(_highlightedPickable))
+        {
+            _highlightedPickable.SetFocused(false);
+            _highlightedPickable.TreeExiting -= OnHighlightedPickableExiting;
+        }
+
+        _highlightedPickable = pickableItem;
+
+        if (_highlightedPickable != null)
+        {
+            _highlightedPickable.SetFocused(true);
+            _highlightedPickable.TreeExiting += OnHighlightedPickableExiting;
+        }
+    }
+
+    private void OnHighlightedPickableExiting()
+    {
+        _highlightedPickable = null;
     }
 
     public void ProcessMovement(double delta)

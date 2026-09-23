@@ -18,7 +18,7 @@ public partial class PlayerMoveState : PlayerState
         {
             Player.Anim.Play("idle");
         }
-        if (intent.Interact && Player.CurrentPickableFocusedItem != null)
+        if (intent.Interact && Player.GetPickableUnderCrosshair() != null)
         {
             StateMachine.ChangeState<PlayerPickUpState>();
             return;
