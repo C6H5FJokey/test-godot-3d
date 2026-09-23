@@ -5,8 +5,6 @@
 
 [resource]
 script = ExtResource("1_tc6ku")
-Name = "Short Sword"
-MaxDuration = 30
 DamageMin = 3
 DamageMax = 5
 Reach = 2.0
@@ -14,5 +12,7 @@ SwingHalfAngle = 35.0
 ThrowRotationSpeed = 40.0
 ThrowMovementSpeed = 15.0
 ImpaleLocalTranslation = Vector3(0, 0, 0.5)
+DisplayName = "Axe"
+MaxDuration = 30
 GlbMesh = ExtResource("1_joehd")
 metadata/_custom_type_script = "uid://7ba7miybv8mj"

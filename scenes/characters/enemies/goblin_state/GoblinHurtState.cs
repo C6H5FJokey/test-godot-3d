@@ -31,6 +31,7 @@ public partial class GoblinHurtState : GoblinState
         else
         {
             Goblin.Anim.Play("hurt");
+            HitSpurt.CreateHitSpurt(Goblin.PhysicalBoneBody.GlobalPosition);
             if (!_isConnectedAnimationFinished)
             {
                 Goblin.Anim.AnimationFinished += _animationFinished;

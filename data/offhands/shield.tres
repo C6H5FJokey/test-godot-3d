@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("2_xeqty")
-Name = "Shield"
+DisplayName = "Shield"
 MaxDuration = 10
 GlbMesh = ExtResource("1_ev44i")
 metadata/_custom_type_script = "uid://x68r6kcxltfn"

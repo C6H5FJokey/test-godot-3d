@@ -12,6 +12,12 @@ border_width_bottom = 100
 border_color = Color(1, 0, 0, 1)
 border_blend = true
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yplap"]
+bg_color = Color(1, 0, 0, 0.2509804)
+
+[sub_resource type="LabelSettings" id="LabelSettings_yplap"]
+font_size = 64
+
 [node name="UI" type="CanvasLayer" unique_id=1465895178]
 script = ExtResource("1_f5cxw")
 
@@ -39,3 +45,75 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_mpqms")
+
+[node name="DamageIndicators" type="Control" parent="." unique_id=486203917]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="DeathScreen" type="Panel" parent="." unique_id=177101105]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_yplap")
+
+[node name="Title" type="Label" parent="DeathScreen" unique_id=2043319633]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -170.0
+offset_top = -144.0
+offset_right = 170.0
+offset_bottom = -56.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
+text = "You Died！"
+label_settings = SubResource("LabelSettings_yplap")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Restart" type="Button" parent="DeathScreen" unique_id=1812756088]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -230.0
+offset_top = 50.0
+offset_right = -50.0
+offset_bottom = 110.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "Restart"
+
+[node name="ExitGame" type="Button" parent="DeathScreen" unique_id=1123214450]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 50.0
+offset_top = 50.0
+offset_right = 230.0
+offset_bottom = 110.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "Exit Game"

@@ -14,15 +14,22 @@ public partial class GameEvents : Node
 
     [Signal] public delegate void ImpactFeltEventHandler(ImpactIntensity intensity);
 
-    [Signal] public delegate void PlayerHurtEventHandler(Player player);
+    [Signal] public delegate void PlayerHurtEventHandler(Player player, Node3D source);
+
+    [Signal] public delegate void PlayerDiedEventHandler(Player player);
 
     public void TriggerImpactFelt(ImpactIntensity intensity)
     {
         EmitSignalImpactFelt(intensity);
     }
 
-    public void TriggerPlayerHurtEvent(Player player)
+    public void TriggerPlayerHurtEvent(Player player, Node3D source)
     {
-        EmitSignalPlayerHurt(player);
+        EmitSignalPlayerHurt(player, source);
+    }
+
+    public void TriggerPlayerDiedEvent(Player player)
+    {
+        EmitSignalPlayerDied(player);
     }
 }

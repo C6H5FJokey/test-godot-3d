@@ -5,6 +5,8 @@ public partial class HealthComponent : Node
 {
     [Signal] public delegate void HealthChangedEventHandler(int hpValue, int maxHPValue, int delta);
 
+    [Signal] public delegate void DamagedEventHandler(int damage, Node3D source);
+
     [Signal] public delegate void DiedEventHandler();
 
     [Export] public int HPValue = -1;
@@ -19,11 +21,16 @@ public partial class HealthComponent : Node
         }
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, Node3D source = null)
     {
         var oldHPvalue = HPValue;
         HPValue = Mathf.Clamp(HPValue - damage, 0, MaxHPValue);
-        EmitSignalHealthChanged(HPValue, MaxHPValue, HPValue - oldHPvalue);
+        var delta = HPValue - oldHPvalue;
+        EmitSignalHealthChanged(HPValue, MaxHPValue, delta);
+        if (delta != 0)
+        {
+            EmitSignalDamaged(-delta, source);
+        }
         if (HPValue == 0 && oldHPvalue > 0)
         {
             EmitSignalDied();

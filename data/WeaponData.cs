@@ -4,7 +4,6 @@ using System;
 [GlobalClass]
 public partial class WeaponData : EquipmentData
 {
-    [Export] public String Name;
     [Export] public int DamageMin;
     [Export] public int DamageMax;
     [Export] public float Reach;

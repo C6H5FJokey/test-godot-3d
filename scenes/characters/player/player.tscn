@@ -13,6 +13,8 @@
 [ext_resource type="Script" uid="uid://br6wcylkq1ujw" path="res://scenes/characters/player/state/PlayerKickState.cs" id="10_i1nod"]
 [ext_resource type="Script" uid="uid://cqhbdkjsrb1c0" path="res://scenes/characters/player/state/PlayerDefendState.cs" id="11_4kqyw"]
 [ext_resource type="Script" uid="uid://dlat4mw0v6cju" path="res://scenes/characters/player/PlayerController.cs" id="12_ptrlc"]
+[ext_resource type="Script" uid="uid://culhs7u1xc3sc" path="res://scenes/characters/player/state/PlayerHurtState.cs" id="13_phurt"]
+[ext_resource type="Script" uid="uid://dt8vchu5l0f02" path="res://scenes/characters/player/state/PlayerDyingState.cs" id="14_pdying"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yplap"]
 margin = 0.3
@@ -116,7 +118,7 @@ ExtraPitch = NodePath("../MainCamera")
 OffhandPlaceHolder = NodePath("../character/骨架/Skeleton3D/OffhandAttachment/OffhandPlaceholder")
 
 [node name="WeaponSpawner" type="Marker3D" parent="." unique_id=640993316]
-transform = Transform3D(-4.3711385e-08, 1, 0, -0.99999994, -4.371139e-08, 0, 0, 0, 0.99999994, 0.10000001, 1.3000001, -0.4)
+transform = Transform3D(-4.3711385e-08, 1, 0, -0.99999994, -4.371139e-08, 0, 0, 0, 0.99999994, 0.1, 1.5, -0.4)
 
 [node name="StateMachine" type="Node" parent="." unique_id=937615775 node_paths=PackedStringArray("_initialState")]
 unique_name_in_owner = true
@@ -142,9 +144,15 @@ script = ExtResource("10_i1nod")
 [node name="PlayerDefendState" type="Node" parent="StateMachine" unique_id=1116290004]
 script = ExtResource("11_4kqyw")
 
+[node name="PlayerHurtState" type="Node" parent="StateMachine" unique_id=1738204519]
+script = ExtResource("13_phurt")
+
+[node name="PlayerDyingState" type="Node" parent="StateMachine" unique_id=1944067283]
+script = ExtResource("14_pdying")
+
 [node name="HealthComponent" parent="." unique_id=172102 instance=ExtResource("9_42irl")]
 unique_name_in_owner = true
-MaxHPValue = 20
+MaxHPValue = 100
 
 [node name="Controller" type="Node" parent="." unique_id=1207201480]
 unique_name_in_owner = true

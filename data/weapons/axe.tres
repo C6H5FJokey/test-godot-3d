@@ -5,8 +5,6 @@
 
 [resource]
 script = ExtResource("1_ccd1n")
-Name = "Axe"
-MaxDuration = 10
 DamageMin = 6
 DamageMax = 10
 Reach = 3.0
@@ -15,5 +13,7 @@ ThrowRotationSpeed = 40.0
 ThrowMovementSpeed = 8.0
 ImpaleLocalTranslation = Vector3(0, 0, 1.8)
 ImpaleLocalRotation = -75.0
+DisplayName = "Axe"
+MaxDuration = 10
 GlbMesh = ExtResource("1_ev13c")
 metadata/_custom_type_script = "uid://7ba7miybv8mj"

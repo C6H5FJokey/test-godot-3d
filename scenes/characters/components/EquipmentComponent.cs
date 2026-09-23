@@ -93,8 +93,15 @@ public partial class EquipmentComponent : Node
         var transform = WeaponSpawner.GlobalTransform;
         throwableItem.GlobalTransform = transform;
         GameState.Instance.CurrentLevel.AddChild(throwableItem);
-        throwableItem.PrepareProjectile(true, appliedImpulse);
+        throwableItem.PrepareProjectile(true, appliedImpulse, GetThrowDirection());
         EquipWeapon(null);
+    }
+
+    // 抛出方向取瞄准方向（带俯仰角）；没挂相机就退回生成点朝向（只有偏航角）
+    private Vector3 GetThrowDirection()
+    {
+        var reference = ExtraPitch != null ? ExtraPitch : WeaponSpawner;
+        return -reference.GlobalBasis.Z;
     }
 
     public void DropWeapon(Vector3 appliedImpulse = default)

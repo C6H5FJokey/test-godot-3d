@@ -11,6 +11,8 @@ public partial class Player : CharacterBody3D
     [Export] public float MaxFallSpeed = 20f;
     [Export] public float RunSpeed;
     [Export] public float WalkSpeed;
+    [Export] public float HurtSpeedMultiplier = 0.5f;
+    [Export] public float HurtSlowDuration = 0.5f;
 
     public AnimationPlayer Anim;
     public Camera3D Camera;
@@ -21,8 +23,17 @@ public partial class Player : CharacterBody3D
     public StateMachine StateMachine;
 
     private PickableItem _highlightedPickable;
+    private float _hurtSlowRemaining;
 
     public CharacterIntent Intent => Controller.Intent;
+
+    // 受击减速：只是临时压低移速，操作权还在玩家手上
+    public float SpeedMultiplier => _hurtSlowRemaining > 0f ? HurtSpeedMultiplier : 1f;
+
+    public void ApplyHurtSlow()
+    {
+        _hurtSlowRemaining = HurtSlowDuration;
+    }
 
     public override void _Ready()
     {
@@ -35,6 +46,8 @@ public partial class Player : CharacterBody3D
         Controller = GetNode<ControllerComponent>("%Controller");
         StateMachine = GetNode<StateMachine>("%StateMachine");
         GameState.Instance.RegisterPlayer(this);
+        HealthComponent.Damaged += OnDamaged;
+        HealthComponent.Died += OnDied;
     }
 
     public override void _Process(double delta)
@@ -45,11 +58,48 @@ public partial class Player : CharacterBody3D
 
     public override void _PhysicsProcess(double delta)
     {
+        _hurtSlowRemaining = Mathf.Max(_hurtSlowRemaining - (float)delta, 0f);
         UpdatePickableHighlight();
         Controller.UpdateIntent(delta);
         StateMachine.TickPhysics(delta);
+
+        // 死亡后状态机照常跑（好让死亡状态生效），但不再有重力与位移
+        if (HealthComponent.IsDead())
+        {
+            return;
+        }
+
         ProcessGravity(delta);
         MoveAndSlide();
+    }
+
+    // 由攻击者调用（目前只有敌人近战）。伤害当场结算：多个敌人同一帧命中时不会互相顶掉。
+    public void TryReceiveHit(Enemy attacker, HurtData hurtData)
+    {
+        if (HealthComponent.IsDead())
+        {
+            return;
+        }
+
+        HealthComponent.TakeDamage(hurtData.Damage, attacker);
+        if (HealthComponent.IsDead())
+        {
+            return; // 死亡由 HealthComponent.Died -> OnDied 接管
+        }
+
+        StateMachine.ChangeState<PlayerHurtState>();
+    }
+
+    private void OnDamaged(int damage, Node3D source)
+    {
+        GameEvents.Instance.TriggerImpactFelt(GameEvents.ImpactIntensity.MEDIUM);
+        GameEvents.Instance.TriggerPlayerHurtEvent(this, source);
+    }
+
+    private void OnDied()
+    {
+        GameEvents.Instance.TriggerPlayerDiedEvent(this);
+        StateMachine.ChangeState<PlayerDyingState>();
     }
 
     public override void _ExitTree()
@@ -122,7 +172,7 @@ public partial class Player : CharacterBody3D
             return;
         }
 
-        var desiredVelocity = Intent.MoveDirection * Intent.Speed;
+        var desiredVelocity = Intent.MoveDirection * Intent.Speed * SpeedMultiplier;
         var acceleration = isOnFloor ? Acceleration : AirAcceleration;
 
         Velocity = Velocity with

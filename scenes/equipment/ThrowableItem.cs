@@ -46,12 +46,18 @@ public partial class ThrowableItem : RigidBody3D
         }
     }
 
-    public void PrepareProjectile(bool isThrown, Vector3 appliedImpulse = default)
+    // launchDirection 是抛出时的初速方向（可以带俯仰角）；不传则用生成点朝向。
+    // 记录用的 OriginalBasis 始终取生成点朝向（只有偏航角），和抛出的俯仰角无关。
+    public void PrepareProjectile(bool isThrown, Vector3 appliedImpulse = default, Vector3 launchDirection = default)
     {
         OriginalBasis = GlobalBasis;
         if (isThrown && EquipmentData is WeaponData weaponData)
         {
-            LinearVelocity = -GlobalBasis.Z * weaponData.ThrowMovementSpeed;
+            if (launchDirection.IsZeroApprox())
+            {
+                launchDirection = -GlobalBasis.Z;
+            }
+            LinearVelocity = launchDirection * weaponData.ThrowMovementSpeed;
             AngularVelocity = -GlobalBasis.Y * weaponData.ThrowRotationSpeed;
         }
         if (appliedImpulse != default)

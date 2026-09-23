@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://bq3n7wxfk1y2t"]
+
+[ext_resource type="Script" uid="uid://bo6pfbi7mg6iy" path="res://scenes/ui/DamageIndicator.cs" id="1_ind"]
+
+[node name="DamageIndicator" type="Control" unique_id=1849919910]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_ind")
+Lifetime = 2.0
+IndicatorColor = Color(1, 0, 0, 0.8509804)
