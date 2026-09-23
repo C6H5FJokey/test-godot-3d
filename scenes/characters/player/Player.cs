@@ -4,8 +4,11 @@ using System;
 public partial class Player : CharacterBody3D
 {
     [Export] public float Acceleration;
+    [Export] public float AirAcceleration = 12f;
     [Export] public float JumpForce;
     [Export] public float Gravity;
+    [Export] public float FallGravityMultiplier = 1.6f;
+    [Export] public float MaxFallSpeed = 20f;
     [Export] public float RunSpeed;
     [Export] public float WalkSpeed;
 
@@ -72,10 +75,13 @@ public partial class Player : CharacterBody3D
 
     public void ProcessGravity(double delta)
     {
-        if (!IsOnFloor())
+        if (IsOnFloor())
         {
-            Velocity = Velocity with { Y = Velocity.Y - Gravity * (float)delta};
+            return;
         }
+
+        var gravity = Velocity.Y > 0f ? Gravity : Gravity * FallGravityMultiplier;
+        Velocity = Velocity with { Y = Mathf.Max(Velocity.Y - gravity * (float)delta, -MaxFallSpeed) };
     }
 
     public PickableItem GetPickableUnderCrosshair()
@@ -113,11 +119,20 @@ public partial class Player : CharacterBody3D
 
     public void ProcessMovement(double delta)
     {
+        var isOnFloor = IsOnFloor();
+
+        if (!isOnFloor && Intent.MoveDirection.IsZeroApprox())
+        {
+            return;
+        }
+
         var desiredVelocity = Intent.MoveDirection * Intent.Speed;
+        var acceleration = isOnFloor ? Acceleration : AirAcceleration;
+
         Velocity = Velocity with
         {
-            X = Mathf.MoveToward(Velocity.X, desiredVelocity.X, Acceleration * (float)delta),
-            Z = Mathf.MoveToward(Velocity.Z, desiredVelocity.Z, Acceleration * (float)delta)
+            X = Mathf.MoveToward(Velocity.X, desiredVelocity.X, acceleration * (float)delta),
+            Z = Mathf.MoveToward(Velocity.Z, desiredVelocity.Z, acceleration * (float)delta)
         };
     }
 
