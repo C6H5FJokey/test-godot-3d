@@ -35,10 +35,7 @@ public partial class GoblinAIController : ControllerComponent
 
     public void SetTargetIfEmpty(Player player)
     {
-        if (Target == null)
-        {
-            Target = player;
-        }
+        Target ??= player;
     }
 
     private void OnBodyEntered(Node3D body)
@@ -63,7 +60,7 @@ public partial class GoblinAIController : ControllerComponent
         var direction = nextPosition - _goblin.GlobalPosition;
         direction.Y = 0f;
 
-        if (direction.LengthSquared() < 0.0001f)
+        if (direction.IsZeroApprox())
         {
             return Vector3.Zero;
         }
