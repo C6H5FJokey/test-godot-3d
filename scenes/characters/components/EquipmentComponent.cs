@@ -12,7 +12,6 @@ public partial class EquipmentComponent : Node
     [Export] public Node3D WeaponPlaceHolder;
     [Export] public Node3D WeaponSpawner;
     [Export] public Node3D ExtraPitch; // 用于放玩家相机来结算俯仰角
-    [Export] public RayCast3D WeaponReachRaycast;
     [Export] public Node3D OffhandPlaceHolder;
 
     private Node3D _host;
@@ -74,7 +73,6 @@ public partial class EquipmentComponent : Node
             tween.Parallel().TweenProperty(equipedItem, "position", Vector3.Zero, 0.4);
             tween.Parallel().TweenProperty(equipedItem, "rotation", Vector3.Zero, 0.2);
         }
-        WeaponReachRaycast.TargetPosition = Vector3.Forward * WeaponData.Reach;
     }
 
     public bool HasWeapon()

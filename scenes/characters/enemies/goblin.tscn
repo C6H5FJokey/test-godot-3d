@@ -306,12 +306,11 @@ autoplay = &"idle"
 unique_name_in_owner = true
 ImpalePlaceholder = NodePath("../character/骨架/Skeleton3D/PhysicalBoneSimulator3D/Physical Bone Body")
 
-[node name="EquipmentComponent" parent="." unique_id=1526314860 node_paths=PackedStringArray("WeaponPlaceHolder", "WeaponSpawner", "WeaponReachRaycast") instance=ExtResource("5_cyclm")]
+[node name="EquipmentComponent" parent="." unique_id=1526314860 node_paths=PackedStringArray("WeaponPlaceHolder", "WeaponSpawner") instance=ExtResource("5_cyclm")]
 unique_name_in_owner = true
 WeaponData = ExtResource("6_ntygi")
 WeaponPlaceHolder = NodePath("../character/骨架/Skeleton3D/BoneAttachment3D/WeaponPlaceholder")
 WeaponSpawner = NodePath("../character/骨架/Skeleton3D/BoneAttachment3D/WeaponPlaceholder")
-WeaponReachRaycast = NodePath("../WeaponReachRaycast")
 
 [node name="StateMachine" type="Node" parent="." unique_id=1463614322 node_paths=PackedStringArray("_initialState")]
 unique_name_in_owner = true
@@ -336,12 +335,6 @@ script = ExtResource("12_exkj4")
 
 [node name="GoblinStunState" type="Node" parent="StateMachine" unique_id=893747715]
 script = ExtResource("13_655sa")
-
-[node name="WeaponReachRaycast" type="RayCast3D" parent="." unique_id=428865034]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-target_position = Vector3(0, 0, -2)
-collision_mask = 2
 
 [node name="HealthComponent" parent="." unique_id=172102 instance=ExtResource("13_k6e44")]
 unique_name_in_owner = true

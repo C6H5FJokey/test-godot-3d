@@ -19,8 +19,6 @@ public partial class Player : CharacterBody3D
     public HealthComponent HealthComponent;
     public ControllerComponent Controller;
     public StateMachine StateMachine;
-    public RayCast3D WeaponReachRaycast;
-    public RayCast3D KickReachRaycast;
 
     private PickableItem _highlightedPickable;
 
@@ -36,8 +34,6 @@ public partial class Player : CharacterBody3D
         HealthComponent = GetNode<HealthComponent>("%HealthComponent");
         Controller = GetNode<ControllerComponent>("%Controller");
         StateMachine = GetNode<StateMachine>("%StateMachine");
-        WeaponReachRaycast = GetNode<RayCast3D>("%WeaponReachRaycast");
-        KickReachRaycast = GetNode<RayCast3D>("%KickReachRaycast");
         GameState.Instance.RegisterPlayer(this);
     }
 

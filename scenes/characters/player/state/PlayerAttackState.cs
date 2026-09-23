@@ -7,6 +7,7 @@ public partial class PlayerAttackState : PlayerState
 {
     private bool _activeAttack = false;
     private HashSet<Enemy> _enemies = [];
+    private readonly List<Node3D> _targets = [];
 
     public override void Enter(State previousState)
     {
@@ -20,26 +21,32 @@ public partial class PlayerAttackState : PlayerState
     {
         Player.CheckJumpInput();
         Player.ProcessMovement(delta);
-        if (_activeAttack)
+        if (!_activeAttack)
         {
-            if (Player.WeaponReachRaycast.IsColliding())
+            return;
+        }
+
+        var weaponData = Player.EquipmentComponent.WeaponData;
+        if (weaponData == null)
+        {
+            return;
+        }
+
+        MeleeSwing.CollectTargets(Player, -Player.GlobalBasis.Z, weaponData.Reach, weaponData.SwingHalfAngle, PhysicsLayers.Enemy, _targets);
+
+        foreach (var target in _targets)
+        {
+            if (target is not Enemy enemy || !_enemies.Add(enemy))
             {
-                if (Player.WeaponReachRaycast.GetCollider() is Enemy enemy)
-                {
-                    if (_enemies.Contains(enemy))
-                    {
-                        return;
-                    }
-                    _enemies.Add(enemy);
-                    var damage = GD.RandRange(Player.EquipmentComponent.WeaponData.DamageMin, Player.EquipmentComponent.WeaponData.DamageMax);
-                    enemy.TryReceiveHit(Player, new HurtData()
-                    {
-                        Damage = damage,
-                        PushbackIntensity = 1.0f,
-                    });
-                    GameEvents.Instance.TriggerImpactFelt(GameEvents.ImpactIntensity.LOW);
-                }
+                continue;
             }
+
+            enemy.TryReceiveHit(Player, new HurtData()
+            {
+                Damage = GD.RandRange(weaponData.DamageMin, weaponData.DamageMax),
+                PushbackIntensity = 1.0f,
+            });
+            GameEvents.Instance.TriggerImpactFelt(GameEvents.ImpactIntensity.LOW);
         }
     }
 

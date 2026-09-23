@@ -107,13 +107,12 @@ transform = Transform3D(-0.116977796, 0.93969274, 0.32139382, -0.9396925, -4.107
 [node name="AnimationPlayer" parent="character" index="1" unique_id=1972368248]
 autoplay = &"idle"
 
-[node name="EquipmentComponent" parent="." unique_id=1526314860 node_paths=PackedStringArray("WeaponPlaceHolder", "WeaponSpawner", "ExtraPitch", "WeaponReachRaycast", "OffhandPlaceHolder") instance=ExtResource("3_hss88")]
+[node name="EquipmentComponent" parent="." unique_id=1526314860 node_paths=PackedStringArray("WeaponPlaceHolder", "WeaponSpawner", "ExtraPitch", "OffhandPlaceHolder") instance=ExtResource("3_hss88")]
 unique_name_in_owner = true
 IsAlwaysInFront = true
 WeaponPlaceHolder = NodePath("../character/骨架/Skeleton3D/MainHandAttachment/WeaponPlaceholder")
 WeaponSpawner = NodePath("../WeaponSpawner")
 ExtraPitch = NodePath("../MainCamera")
-WeaponReachRaycast = NodePath("../WeaponReachRaycast")
 OffhandPlaceHolder = NodePath("../character/骨架/Skeleton3D/OffhandAttachment/OffhandPlaceholder")
 
 [node name="WeaponSpawner" type="Marker3D" parent="." unique_id=640993316]
@@ -142,18 +141,6 @@ script = ExtResource("10_i1nod")
 
 [node name="PlayerDefendState" type="Node" parent="StateMachine" unique_id=1116290004]
 script = ExtResource("11_4kqyw")
-
-[node name="WeaponReachRaycast" type="RayCast3D" parent="." unique_id=852096943]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-target_position = Vector3(0, 0, -2)
-collision_mask = 4
-
-[node name="KickReachRaycast" type="RayCast3D" parent="." unique_id=746618335]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-target_position = Vector3(0, 0, -2)
-collision_mask = 36
 
 [node name="HealthComponent" parent="." unique_id=172102 instance=ExtResource("9_42irl")]
 unique_name_in_owner = true

@@ -10,6 +10,7 @@ MaxDuration = 10
 DamageMin = 6
 DamageMax = 10
 Reach = 3.0
+SwingHalfAngle = 50.0
 ThrowRotationSpeed = 40.0
 ThrowMovementSpeed = 8.0
 ImpaleLocalTranslation = Vector3(0, 0, 1.8)

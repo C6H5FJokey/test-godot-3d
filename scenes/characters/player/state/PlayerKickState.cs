@@ -1,11 +1,16 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class PlayerKickState : PlayerState
 {
+    [Export] public float Reach = 2f;
+    [Export] public float SwingHalfAngle = 45f;
+
     private bool _isConnectedAnimationFinished = false;
     private double _timeElapsed = 0;
     private bool _hasEmittedDamage = false;
+    private readonly List<Node3D> _targets = [];
     public override void Enter(State previousState)
     {
         Player.Anim.Play("kick");
@@ -25,22 +30,30 @@ public partial class PlayerKickState : PlayerState
         if (_timeElapsed > 0.1 && !_hasEmittedDamage)
         {
             _hasEmittedDamage = true;
-            if (Player.KickReachRaycast.IsColliding())
+            ApplyKick();
+        }
+    }
+
+    private void ApplyKick()
+    {
+        var forward = -Player.GlobalBasis.Z;
+        MeleeSwing.CollectTargets(Player, forward, Reach, SwingHalfAngle, PhysicsLayers.Enemy | PhysicsLayers.Door, _targets);
+
+        foreach (var target in _targets)
+        {
+            switch (target)
             {
-                switch(Player.KickReachRaycast.GetCollider())
-                {
-                    case Enemy enemy:
-                        enemy.TryReceiveHit(Player, new HurtData()
-                        {
-                            PushbackIntensity = 2.0f,
-                            Stun = true,
-                        });
-                        GameEvents.Instance.TriggerImpactFelt(GameEvents.ImpactIntensity.LOW);
-                        break;
-                    case DoorBody doorBody:
-                        doorBody.TriggerOpenRequested(-Player.KickReachRaycast.GlobalBasis.Z * 2);
-                        break;
-                }
+                case Enemy enemy:
+                    enemy.TryReceiveHit(Player, new HurtData()
+                    {
+                        PushbackIntensity = 2.0f,
+                        Stun = true,
+                    });
+                    GameEvents.Instance.TriggerImpactFelt(GameEvents.ImpactIntensity.LOW);
+                    break;
+                case DoorBody doorBody:
+                    doorBody.TriggerOpenRequested(forward * 2);
+                    break;
             }
         }
     }

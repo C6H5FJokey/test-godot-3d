@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 public partial class Goblin : Enemy, IImpaleable
@@ -21,7 +22,7 @@ public partial class Goblin : Enemy, IImpaleable
     public PhysicalBone3D PhysicalBoneBody;
     public StateMachine StateMachine;
     public GoblinAIController Controller;
-    private RayCast3D _weaponReachRaycast;
+    private readonly List<Node3D> _swingTargets = [];
     public NavigationAgent3D NavigationAgent3D;
 
     public ulong TimeSinceLastAttack;
@@ -44,7 +45,6 @@ public partial class Goblin : Enemy, IImpaleable
         PhysicalBoneBody = GetNode<PhysicalBone3D>("%Physical Bone Body");
         StateMachine = GetNode<StateMachine>("%StateMachine");
         Controller = GetNode<GoblinAIController>("%Controller");
-        _weaponReachRaycast = GetNode<RayCast3D>("%WeaponReachRaycast");
         NavigationAgent3D = GetNode<NavigationAgent3D>("%NavigationAgent3D");
     }
 
@@ -112,7 +112,9 @@ public partial class Goblin : Enemy, IImpaleable
         {
             return false;
         }
-        return _weaponReachRaycast.IsColliding() && _weaponReachRaycast.GetCollider() == target;
+
+        MeleeSwing.CollectTargets(this, -GlobalBasis.Z, EquipmentComponent.WeaponData.Reach, EquipmentComponent.WeaponData.SwingHalfAngle, PhysicsLayers.Player, _swingTargets);
+        return _swingTargets.Contains(target);
     }
 
     public override void TryReceiveHit(Player player, HurtData hurtData)
@@ -149,7 +151,7 @@ public partial class Goblin : Enemy, IImpaleable
     {
         if (!IsOnFloor())
         {
-            Velocity = Velocity with { Y = Velocity.Y - Gravity * (float)delta };
+            Velocity = Velocity with { Y = Velocity.Y - Gravity * (float)delta};
         }
     }
 
